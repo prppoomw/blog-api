@@ -38,10 +38,10 @@ type PostListQueryRequest struct {
 }
 
 type PostUsecase interface {
-	GetPost(slug string) (Post, error)
-	GetPostList(req PostListQueryRequest) (PostListResponse, error)
-	CreatePost(post Post) (Post, error)
-	DeletePost(id bson.ObjectID, user bson.ObjectID) error
+	GetPost(c context.Context, slug string) (*Post, error)
+	CreatePost(c context.Context, post *Post) (*Post, error)
+	DeletePost(c context.Context, id bson.ObjectID, user bson.ObjectID) error
+	GetPostList(c context.Context, req *PostListQueryRequest) (*PostListResponse, error)
 }
 
 type PostRepository interface {

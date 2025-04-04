@@ -1,32 +1,45 @@
 package service
 
 import (
+	"context"
+	"time"
+
 	"github.com/prppoomw/blog-api/internal/domain"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 type PostService struct {
 	postRepository domain.PostRepository
+	contextTimeout time.Duration
 }
 
-func NewPostService(postRepository domain.PostRepository) domain.PostUsecase {
+func NewPostService(postRepository domain.PostRepository, timeout time.Duration) domain.PostUsecase {
 	return &PostService{
 		postRepository: postRepository,
+		contextTimeout: timeout,
 	}
 }
 
-func (s *PostService) GetPost(slug string) (domain.Post, error) {
-	return domain.Post{}, nil
+func (s *PostService) GetPost(c context.Context, slug string) (*domain.Post, error) {
+	ctx, cancel := context.WithTimeout(c, s.contextTimeout)
+	defer cancel()
+	return s.postRepository.FindBySlug(ctx, slug)
 }
 
-func (s *PostService) GetPostList(req domain.PostListQueryRequest) (domain.PostListResponse, error) {
-	return domain.PostListResponse{}, nil
+func (s *PostService) CreatePost(c context.Context, post *domain.Post) (*domain.Post, error) {
+	ctx, cancel := context.WithTimeout(c, s.contextTimeout)
+	defer cancel()
+	return s.postRepository.Create(ctx, post)
 }
 
-func (s *PostService) CreatePost(post domain.Post) (domain.Post, error) {
-	return domain.Post{}, nil
+func (s *PostService) DeletePost(c context.Context, id bson.ObjectID, user bson.ObjectID) error {
+	ctx, cancel := context.WithTimeout(c, s.contextTimeout)
+	defer cancel()
+	return s.postRepository.Delete(ctx, id, user)
 }
 
-func (s *PostService) DeletePost(id bson.ObjectID, user bson.ObjectID) error {
-	return nil
+func (s *PostService) GetPostList(c context.Context, req *domain.PostListQueryRequest) (*domain.PostListResponse, error) {
+	ctx, cancel := context.WithTimeout(c, s.contextTimeout)
+	defer cancel()
+	return s.postRepository.FindByQuery(ctx, req)
 }
