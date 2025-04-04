@@ -1,22 +1,32 @@
 package service
 
 import (
-	"github.com/prppoomw/blog-api/internal/model"
+	"github.com/prppoomw/blog-api/internal/domain"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-type PostResponse struct {
+type PostService struct {
+	postRepository domain.PostRepository
 }
 
-type PostListResponse struct {
+func NewPostService(postRepository domain.PostRepository) domain.PostUsecase {
+	return &PostService{
+		postRepository: postRepository,
+	}
 }
 
-type PostListQueryRequest struct {
+func (s *PostService) GetPost(slug string) (domain.PostResponse, error) {
+	return domain.PostResponse{}, nil
 }
 
-type PostService interface {
-	GetPost(*string) (*PostResponse, error)
-	GetPostList(*PostListQueryRequest) (*PostListResponse, error)
-	CreatePost(*model.Post) (*PostResponse, error)
-	DeletePost(*bson.ObjectID) error
+func (s *PostService) GetPostList(req domain.PostListQueryRequest) (domain.PostListResponse, error) {
+	return domain.PostListResponse{}, nil
+}
+
+func (s *PostService) CreatePost(post domain.Post) (domain.PostResponse, error) {
+	return domain.PostResponse{}, nil
+}
+
+func (s *PostService) DeletePost(id bson.ObjectID) error {
+	return nil
 }

@@ -1,4 +1,4 @@
-package model
+package domain
 
 import (
 	"time"
@@ -17,4 +17,23 @@ type Post struct {
 	Content   string        `bson:"content"`
 	CreatedAt time.Time     `bson:"createdAt"`
 	UpdatedAt time.Time     `bson:"updatedAt"`
+}
+
+type PostResponse struct {
+}
+
+type PostListResponse struct {
+}
+
+type PostListQueryRequest struct {
+}
+
+type PostUsecase interface {
+	GetPost(string) (PostResponse, error)
+	GetPostList(PostListQueryRequest) (PostListResponse, error)
+	CreatePost(Post) (PostResponse, error)
+	DeletePost(bson.ObjectID) error
+}
+
+type PostRepository interface {
 }

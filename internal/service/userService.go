@@ -1,8 +1,23 @@
 package service
 
-import "github.com/prppoomw/blog-api/internal/model"
+import (
+	"github.com/prppoomw/blog-api/internal/domain"
+)
 
-type UserService interface {
-	GetUserSavedPostList(*model.User) (*[]string, error)
-	SavePost(*model.User, *string) error
+type UserService struct {
+	userRepository domain.UserRepository
+}
+
+func NewUserService(userRepository domain.UserRepository) domain.UserUsecase {
+	return &UserService{
+		userRepository: userRepository,
+	}
+}
+
+func (s *UserService) GetUserSavedPostList(user domain.User) ([]string, error) {
+	return nil, nil
+}
+
+func (s *UserService) SavePost(user domain.User, id string) error {
+	return nil
 }

@@ -1,4 +1,4 @@
-package model
+package domain
 
 import (
 	"time"
@@ -15,4 +15,12 @@ type User struct {
 	SavedPosts  []string      `bson:"savedPosts"`
 	CreatedAt   time.Time     `bson:"createdAt"`
 	UpdatedAt   time.Time     `bson:"updatedAt"`
+}
+
+type UserUsecase interface {
+	GetUserSavedPostList(User) ([]string, error)
+	SavePost(User, string) error
+}
+
+type UserRepository interface {
 }
