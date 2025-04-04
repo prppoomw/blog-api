@@ -15,18 +15,18 @@ func NewPostService(postRepository domain.PostRepository) domain.PostUsecase {
 	}
 }
 
-func (s *PostService) GetPost(slug string) (domain.PostResponse, error) {
-	return domain.PostResponse{}, nil
+func (s *PostService) GetPost(slug string) (domain.Post, error) {
+	return domain.Post{}, nil
 }
 
 func (s *PostService) GetPostList(req domain.PostListQueryRequest) (domain.PostListResponse, error) {
 	return domain.PostListResponse{}, nil
 }
 
-func (s *PostService) CreatePost(post domain.Post) (domain.PostResponse, error) {
-	return domain.PostResponse{}, nil
+func (s *PostService) CreatePost(post domain.Post) (domain.Post, error) {
+	return domain.Post{}, nil
 }
 
-func (s *PostService) DeletePost(id bson.ObjectID) error {
+func (s *PostService) DeletePost(id bson.ObjectID, user bson.ObjectID) error {
 	return nil
 }
