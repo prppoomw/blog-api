@@ -11,13 +11,13 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func NewPostRoute(timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewPostRoute(timeout time.Duration, db mongo.Database, privateGroup *gin.RouterGroup, publicGroup *gin.RouterGroup) {
 	r := repository.NewPostRepository(&db, domain.CollectionPosts)
 	s := service.NewPostService(r, timeout)
 	c := controller.NewPostController(s)
 
-	group.GET("/post", c.GetPost)
-	group.POST("/post", c.CreatePost)
-	group.DELETE("/post", c.DeletePost)
-	group.GET("/post/search", c.GetPostList)
+	publicGroup.GET("/post", c.GetPost)
+	privateGroup.POST("/post", c.CreatePost)
+	privateGroup.DELETE("/post", c.DeletePost)
+	publicGroup.GET("/post/search", c.GetPostList)
 }

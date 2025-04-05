@@ -7,9 +7,13 @@ import (
 )
 
 type Config struct {
-	Profile     string `mapstructure:"PROFILE"`
-	ServerPort  string `mapstructure:"SERVER_PORT"`
-	MongoDBHost string `mapstructure:"MONGODB_HOST"`
+	Profile            string `mapstructure:"PROFILE"`
+	ServerPort         string `mapstructure:"SERVER_PORT"`
+	DBName             string `mapstructure:"DB_NAME"`
+	MongoDBHost        string `mapstructure:"MONGODB_HOST"`
+	ContextTimeout     int    `mapstructure:"CONTEXT_TIMEOUT"`
+	ClerkKey           string `mapstructure:"CLERK_KEY"`
+	ClerkWebhookSecret string `mapstructure:"CLERK_WEBHOOK_SECRET"`
 }
 
 func LoadConfig() *Config {

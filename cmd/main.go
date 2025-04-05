@@ -1,15 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/prppoomw/blog-api/internal/config"
+	"github.com/prppoomw/blog-api/internal/route"
 )
 
 func main() {
 	cfg := config.LoadConfig()
-	fmt.Println(cfg)
 	dbClient := config.ConnectMongodb(cfg.MongoDBHost)
-	fmt.Println(dbClient)
+	db := dbClient.Database(cfg.DBName)
 	defer config.CloseDatabaseConnection(dbClient)
+
+	timeout := time.Duration(cfg.ContextTimeout) * time.Second
+
+	gin := gin.Default()
+
+	route.Setup(cfg, timeout, db, gin)
+
+	gin.Run(cfg.ServerPort)
 }

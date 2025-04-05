@@ -6,6 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
+const (
+	CollectionUsers = "users"
+)
+
 type User struct {
 	ID          bson.ObjectID `bson:"_id"`
 	ClerkUserID string        `bson:"clerkUserId"`
