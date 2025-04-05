@@ -32,10 +32,10 @@ func (s *PostService) CreatePost(c context.Context, post *domain.Post) (*domain.
 	return s.postRepository.Create(ctx, post)
 }
 
-func (s *PostService) DeletePost(c context.Context, id bson.ObjectID, user bson.ObjectID) error {
+func (s *PostService) DeletePost(c context.Context, id bson.ObjectID, userId string) error {
 	ctx, cancel := context.WithTimeout(c, s.contextTimeout)
 	defer cancel()
-	return s.postRepository.Delete(ctx, id, user)
+	return s.postRepository.Delete(ctx, id, userId)
 }
 
 func (s *PostService) GetPostList(c context.Context, req *domain.PostListQueryRequest) (*domain.PostListResponse, error) {

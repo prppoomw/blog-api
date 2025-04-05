@@ -36,13 +36,13 @@ func (r *postRepository) Create(c context.Context, post *domain.Post) (*domain.P
 	return post, err
 }
 
-func (r *postRepository) Delete(c context.Context, id bson.ObjectID, user bson.ObjectID) error {
+func (r *postRepository) Delete(c context.Context, id bson.ObjectID, userId string) error {
 	collection := r.db.Collection(r.collection)
 	filter := bson.M{"_id": id}
-	filter["user"] = user
+	filter["userId"] = userId
 	result, err := collection.DeleteOne(c, filter)
 	if result.DeletedCount == 0 {
-		return errors.New("no post deleted")
+		return errors.New("you can delete only your post")
 	}
 	return err
 }

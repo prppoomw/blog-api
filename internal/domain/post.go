@@ -12,16 +12,16 @@ const (
 )
 
 type Post struct {
-	ID        bson.ObjectID `bson:"_id"`
-	User      bson.ObjectID `bson:"user"`
-	Img       string        `bson:"img"`
-	Title     string        `bson:"title"`
-	Slug      string        `bson:"slug"`
-	Desc      string        `bson:"desc"`
-	Category  []string      `bson:"category"`
-	Content   string        `bson:"content"`
-	CreatedAt time.Time     `bson:"createdAt"`
-	UpdatedAt time.Time     `bson:"updatedAt"`
+	ID        bson.ObjectID `bson:"_id" json:"id"`
+	UserId    string        `bson:"userId" json:"userId"`
+	Img       string        `bson:"img" json:"img"`
+	Title     string        `bson:"title" json:"title"`
+	Slug      string        `bson:"slug" json:"slug"`
+	Desc      string        `bson:"desc" json:"desc"`
+	Category  []string      `bson:"category" json:"category"`
+	Content   string        `bson:"content" json:"content"`
+	CreatedAt time.Time     `bson:"createdAt" json:"createdAt"`
+	UpdatedAt time.Time     `bson:"updatedAt" json:"updateAt"`
 }
 
 type PostListResponse struct {
@@ -40,13 +40,13 @@ type PostListQueryRequest struct {
 type PostUsecase interface {
 	GetPost(c context.Context, slug string) (*Post, error)
 	CreatePost(c context.Context, post *Post) (*Post, error)
-	DeletePost(c context.Context, id bson.ObjectID, user bson.ObjectID) error
+	DeletePost(c context.Context, id bson.ObjectID, userId string) error
 	GetPostList(c context.Context, req *PostListQueryRequest) (*PostListResponse, error)
 }
 
 type PostRepository interface {
 	FindBySlug(c context.Context, slug string) (*Post, error)
 	Create(c context.Context, post *Post) (*Post, error)
-	Delete(c context.Context, id bson.ObjectID, user bson.ObjectID) error
+	Delete(c context.Context, id bson.ObjectID, userId string) error
 	FindByQuery(c context.Context, query *PostListQueryRequest) (*PostListResponse, error)
 }
