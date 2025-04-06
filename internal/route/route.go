@@ -12,13 +12,19 @@ import (
 )
 
 func Setup(cfg *config.Config, timeout time.Duration, db *mongo.Database, gin *gin.Engine) {
+	corsConfig := cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+	gin.Use(cors.New(corsConfig))
 	gin.Use(GlobalErrorHandler())
 
 	privateRouter := gin.Group("")
 	publicRouter := gin.Group("")
-
-	privateRouter.Use(cors.Default())
-	publicRouter.Use(cors.Default())
 
 	privateRouter.Use(middleware.ClerkAuthMiddleware(cfg))
 

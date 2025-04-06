@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prppoomw/blog-api/internal/domain"
@@ -73,11 +74,34 @@ func (ctrl *PostController) DeletePost(c *gin.Context) {
 
 func (ctrl *PostController) GetPostList(c *gin.Context) {
 	var queryReq domain.PostListQueryRequest
-	e := c.ShouldBind(&queryReq)
-	if e != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: e.Error()})
-		return
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+	queryReq.Category = c.Query("category")
+	queryReq.Author = c.Query("author")
+	queryReq.Search = c.Query("search")
+
+	if pageStr != "" {
+		page, err := strconv.Atoi(pageStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid page number"})
+			return
+		}
+		queryReq.Page = page
+	} else {
+		queryReq.Page = 1
 	}
+
+	if limitStr != "" {
+		limit, err := strconv.Atoi(limitStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid limit value"})
+			return
+		}
+		queryReq.Limit = limit
+	} else {
+		queryReq.Limit = 6
+	}
+
 	res, err := ctrl.postService.GetPostList(c, &queryReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
