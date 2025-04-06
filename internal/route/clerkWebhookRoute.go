@@ -21,5 +21,5 @@ func NewClerkRoute(timeout time.Duration, db mongo.Database, publicGroup *gin.Ro
 	s := service.NewClerkWebhookService(r, timeout)
 	c := controller.NewClerkWebhookController(s, clerkWebhookSecret)
 
-	publicGroup.POST("/post", c.HandleWebhook)
+	publicGroup.POST("/clerk", c.HandleWebhook)
 }

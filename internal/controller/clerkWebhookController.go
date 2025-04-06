@@ -61,6 +61,7 @@ func (ctrl *ClerkWebhookController) HandleWebhook(c *gin.Context) {
 	err = ctrl.clerkWebhookService.HandleWebhook(c, payloadData)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		log.Fatal(err)
 		return
 	}
 

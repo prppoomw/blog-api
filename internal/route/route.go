@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/prppoomw/blog-api/internal/config"
@@ -13,7 +12,6 @@ import (
 )
 
 func Setup(cfg *config.Config, timeout time.Duration, db *mongo.Database, gin *gin.Engine) {
-	clerk.SetKey(cfg.ClerkKey)
 	gin.Use(GlobalErrorHandler())
 
 	privateRouter := gin.Group("")
@@ -22,8 +20,9 @@ func Setup(cfg *config.Config, timeout time.Duration, db *mongo.Database, gin *g
 	privateRouter.Use(cors.Default())
 	publicRouter.Use(cors.Default())
 
-	privateRouter.Use(middleware.ClerkAuthMiddleware())
+	privateRouter.Use(middleware.ClerkAuthMiddleware(cfg))
 
+	NewClerkRoute(timeout, *db, publicRouter, cfg)
 	NewPostRoute(timeout, *db, privateRouter, publicRouter)
 }
 

@@ -2,26 +2,33 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/clerk/clerk-sdk-go/v2"
-	clerkhttp "github.com/clerk/clerk-sdk-go/v2/http"
+	"github.com/clerk/clerk-sdk-go/v2/jwt"
+	"github.com/clerk/clerk-sdk-go/v2/user"
 	"github.com/gin-gonic/gin"
+	"github.com/prppoomw/blog-api/internal/config"
+	"github.com/prppoomw/blog-api/internal/domain"
 )
 
-func ClerkAuthMiddleware() gin.HandlerFunc {
+func ClerkAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		dummyHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-
-		protectedHandler := clerkhttp.WithHeaderAuthorization()(dummyHandler)
-
-		protectedHandler.ServeHTTP(c.Writer, c.Request)
-
-		claims, ok := clerk.SessionClaimsFromContext(c.Request.Context())
-		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+		clerk.SetKey(cfg.ClerkKey)
+		sessionToken := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+		claims, err := jwt.Verify(c.Request.Context(), &jwt.VerifyParams{
+			Token: sessionToken,
+		})
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "unauthorized"})
+		}
+		usr, err := user.Get(c.Request.Context(), claims.Subject)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "failed to get user"})
 			return
 		}
-		c.Set("claims", claims)
+		//c.Set("claims", claims)
+		c.Set("userId", usr.ID)
 		c.Next()
 	}
 }
