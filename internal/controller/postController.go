@@ -1,20 +1,27 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imagekit-developer/imagekit-go"
+	"github.com/prppoomw/blog-api/internal/config"
 	"github.com/prppoomw/blog-api/internal/domain"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 type PostController struct {
 	postService domain.PostUsecase
+	cfg         *config.Config
 }
 
-func NewPostController(postService domain.PostUsecase) *PostController {
-	return &PostController{postService: postService}
+func NewPostController(postService domain.PostUsecase, cfg *config.Config) *PostController {
+	return &PostController{
+		postService: postService,
+		cfg:         cfg,
+	}
 }
 
 func (ctrl *PostController) GetPost(c *gin.Context) {
@@ -108,4 +115,19 @@ func (ctrl *PostController) GetPostList(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, res)
+}
+
+func (ctrl *PostController) Upload(c *gin.Context) {
+	ik := imagekit.NewFromParams(imagekit.NewParams{
+		PrivateKey:  ctrl.cfg.ImgkitPrivateKey,
+		PublicKey:   ctrl.cfg.ImgkitPublicKey,
+		UrlEndpoint: ctrl.cfg.ImgkitUrlEndpoint,
+	})
+	resp := ik.SignToken(imagekit.SignTokenParam{})
+	log.Println(resp)
+	c.JSON(http.StatusOK, gin.H{
+		"signature": resp.Signature,
+		"expire":    resp.Expires,
+		"token":     resp.Token,
+	})
 }

@@ -14,6 +14,9 @@ type Config struct {
 	ContextTimeout     int    `mapstructure:"CONTEXT_TIMEOUT"`
 	ClerkKey           string `mapstructure:"CLERK_KEY"`
 	ClerkWebhookSecret string `mapstructure:"CLERK_WEBHOOK_SECRET"`
+	ImgkitPrivateKey   string `mapstructure:"IMGKIT_PRIVATE_KEY"`
+	ImgkitPublicKey    string `mapstructure:"IMGKIT_PUBLIC_KEY"`
+	ImgkitUrlEndpoint  string `mapstructure:"IMGKIT_ENDPOINT"`
 }
 
 func LoadConfig() *Config {

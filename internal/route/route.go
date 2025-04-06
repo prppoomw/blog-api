@@ -29,7 +29,7 @@ func Setup(cfg *config.Config, timeout time.Duration, db *mongo.Database, gin *g
 	privateRouter.Use(middleware.ClerkAuthMiddleware(cfg))
 
 	NewClerkRoute(timeout, *db, publicRouter, cfg)
-	NewPostRoute(timeout, *db, privateRouter, publicRouter)
+	NewPostRoute(timeout, *db, privateRouter, publicRouter, cfg)
 }
 
 func GlobalErrorHandler() gin.HandlerFunc {
