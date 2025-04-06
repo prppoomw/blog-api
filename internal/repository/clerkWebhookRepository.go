@@ -25,10 +25,9 @@ func (r *clerkWebhookRepository) CreateUser(c context.Context, user *domain.User
 	return err
 }
 
-func (r *clerkWebhookRepository) DeleteUser(c context.Context, clerkUserId string) error {
+func (r *clerkWebhookRepository) DeleteUser(c context.Context, clerkUserId string) (*mongo.DeleteResult, error) {
 	filer := bson.M{"clerkUserId": clerkUserId}
-	_, err := r.userCollection.DeleteOne(c, filer)
-	return err
+	return r.userCollection.DeleteOne(c, filer)
 }
 
 func (r *clerkWebhookRepository) DeletePostsByUser(c context.Context, userId string) error {

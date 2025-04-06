@@ -11,8 +11,8 @@ const (
 )
 
 type User struct {
-	ID          bson.ObjectID `bson:"_id"`
-	ClerkUserID string        `bson:"clerkUserId"`
+	Id          bson.ObjectID `bson:"_id"`
+	ClerkUserId string        `bson:"clerkUserId"`
 	Username    string        `bson:"username"`
 	Email       string        `bson:"email"`
 	Img         string        `bson:"img"`
