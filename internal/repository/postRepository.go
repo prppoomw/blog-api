@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/prppoomw/blog-api/internal/domain"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -30,9 +31,19 @@ func (r *postRepository) FindBySlug(c context.Context, slug string) (*domain.Pos
 }
 
 func (r *postRepository) Create(c context.Context, post *domain.Post) (*domain.Post, error) {
-	collection := r.db.Collection(r.collection)
+	userCollection := r.db.Collection(domain.CollectionUsers)
+	var user domain.User
+	e := userCollection.FindOne(c, bson.M{"clerkUserId": post.UserId}).Decode(&user)
+	if e != nil {
+		return nil, e
+	}
+	postCollection := r.db.Collection(r.collection)
 	post.ID = bson.NewObjectID()
-	_, err := collection.InsertOne(c, post)
+	now := time.Now()
+	post.CreatedAt, post.UpdatedAt = now, now
+	post.Username = user.Username
+	post.UserImg = user.Img
+	_, err := postCollection.InsertOne(c, post)
 	return post, err
 }
 

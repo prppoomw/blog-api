@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -25,10 +26,11 @@ func NewPostController(postService domain.PostUsecase, cfg *config.Config) *Post
 }
 
 func (ctrl *PostController) GetPost(c *gin.Context) {
-	slug := c.Query("slug")
+	slug := c.Param("slug")
 	post, err := ctrl.postService.GetPost(c, slug)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		fmt.Println(err)
 		return
 	}
 	if post == nil {
@@ -87,7 +89,7 @@ func (ctrl *PostController) GetPostList(c *gin.Context) {
 	queryReq.Author = c.Query("author")
 	queryReq.Search = c.Query("search")
 
-	if pageStr != "" {
+	if pageStr != "" && pageStr != "0" {
 		page, err := strconv.Atoi(pageStr)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid page number"})
@@ -98,7 +100,7 @@ func (ctrl *PostController) GetPostList(c *gin.Context) {
 		queryReq.Page = 1
 	}
 
-	if limitStr != "" {
+	if limitStr != "" && limitStr != "0" {
 		limit, err := strconv.Atoi(limitStr)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid limit value"})
@@ -106,7 +108,7 @@ func (ctrl *PostController) GetPostList(c *gin.Context) {
 		}
 		queryReq.Limit = limit
 	} else {
-		queryReq.Limit = 6
+		queryReq.Limit = 2
 	}
 
 	res, err := ctrl.postService.GetPostList(c, &queryReq)

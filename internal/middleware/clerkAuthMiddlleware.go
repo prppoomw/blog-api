@@ -29,6 +29,8 @@ func ClerkAuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		}
 		//c.Set("claims", claims)
 		c.Set("userId", usr.ID)
+		c.Set("username", usr.Username)
+		c.Set("userImg", usr.ImageURL)
 		c.Next()
 	}
 }

@@ -14,6 +14,8 @@ const (
 type Post struct {
 	ID        bson.ObjectID `bson:"_id" json:"id"`
 	UserId    string        `bson:"userId" json:"userId"`
+	Username  string        `bson:"username" json:"username"`
+	UserImg   string        `bson:"userImg" json:"userImg"`
 	Img       string        `bson:"img" json:"img"`
 	Title     string        `bson:"title" json:"title"`
 	Slug      string        `bson:"slug" json:"slug"`

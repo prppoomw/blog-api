@@ -17,7 +17,7 @@ func NewPostRoute(timeout time.Duration, db mongo.Database, privateGroup *gin.Ro
 	s := service.NewPostService(r, timeout)
 	c := controller.NewPostController(s, cfg)
 
-	publicGroup.GET("/post", c.GetPost)
+	publicGroup.GET("/post/:slug", c.GetPost)
 	privateGroup.POST("/post", c.CreatePost)
 	privateGroup.DELETE("/post", c.DeletePost)
 	publicGroup.GET("/post/search", c.GetPostList)
