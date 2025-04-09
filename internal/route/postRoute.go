@@ -21,5 +21,5 @@ func NewPostRoute(timeout time.Duration, db mongo.Database, privateGroup *gin.Ro
 	privateGroup.POST("/post", c.CreatePost)
 	privateGroup.DELETE("/post", c.DeletePost)
 	publicGroup.GET("/post/search", c.GetPostList)
-	publicGroup.GET("/upload", c.Upload)
+	publicGroup.GET("/upload-imgkit", c.Upload)
 }
